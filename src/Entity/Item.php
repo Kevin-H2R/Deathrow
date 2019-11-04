@@ -33,6 +33,11 @@ class Item
      */
     private $recipes;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $image_id;
+
     public function __construct()
     {
         $this->equipments = new ArrayCollection();
@@ -109,6 +114,18 @@ class Item
                 $recipe->setItem(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImageId(): ?int
+    {
+        return $this->image_id;
+    }
+
+    public function setImageId(?int $image_id): self
+    {
+        $this->image_id = $image_id;
 
         return $this;
     }

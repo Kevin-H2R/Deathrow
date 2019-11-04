@@ -38,9 +38,20 @@ class Equipment
      */
     private $recipes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Effect", mappedBy="equipment")
+     */
+    private $effects;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $image_id;
+
     public function __construct()
     {
         $this->recipes = new ArrayCollection();
+        $this->effects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -106,6 +117,49 @@ class Equipment
         if ($this->recipes->contains($recipe)) {
             $this->recipes->removeElement($recipe);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Effect[]
+     */
+    public function getEffects(): Collection
+    {
+        return $this->effects;
+    }
+
+    public function addEffect(Effect $effect): self
+    {
+        if (!$this->effects->contains($effect)) {
+            $this->effects[] = $effect;
+            $effect->setEquipment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEffect(Effect $effect): self
+    {
+        if ($this->effects->contains($effect)) {
+            $this->effects->removeElement($effect);
+            // set the owning side to null (unless already changed)
+            if ($effect->getEquipment() === $this) {
+                $effect->setEquipment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getImageId(): ?int
+    {
+        return $this->image_id;
+    }
+
+    public function setImageId(?int $image_id): self
+    {
+        $this->image_id = $image_id;
 
         return $this;
     }
