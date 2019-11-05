@@ -48,6 +48,11 @@ class Equipment
      */
     private $image_id;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $type;
+
     public function __construct()
     {
         $this->recipes = new ArrayCollection();
@@ -160,6 +165,18 @@ class Equipment
     public function setImageId(?int $image_id): self
     {
         $this->image_id = $image_id;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
