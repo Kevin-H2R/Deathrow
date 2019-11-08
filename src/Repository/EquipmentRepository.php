@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Equipment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @method Equipment|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +18,22 @@ class EquipmentRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Equipment::class);
+    }
+
+    public function getEquipmentsAtPage(int $page, int $equipmentsPerPage = 10)
+    {
+        $queryBuilder = $this->createQueryBuilder('e');
+        $queryBuilder->select('e, c', 'ef', 'r', 'i')
+            ->innerJoin('e.cloth', 'c')
+            ->innerJoin('e.effects', 'ef')
+            ->innerJoin('e.recipes', 'r')
+            ->innerJoin('r.item', 'i')
+            ;
+        $query = $queryBuilder->getQuery();
+        $results = $query->setFirstResult($page * $equipmentsPerPage)
+            ->setMaxResults($equipmentsPerPage)->getArrayResult();
+
+        return $results;
     }
 
     // /**
