@@ -19,6 +19,15 @@ class ItemRepository extends ServiceEntityRepository
         parent::__construct($registry, Item::class);
     }
 
+    public function getNFirsts($number)
+    {
+        $queryBuilder = $this->createQueryBuilder('i');
+        $queryBuilder->setMaxResults($number);
+        $query = $queryBuilder->getQuery();
+
+        return $query->setMaxResults(10)->setFirstResult(9)->getArrayResult();
+    }
+
     // /**
     //  * @return Item[] Returns an array of Item objects
     //  */
