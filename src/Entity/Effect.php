@@ -89,4 +89,14 @@ class Effect
 
         return $this;
     }
+
+    public function toJson()
+    {
+        return  [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'min' => $this->getMin(),
+            'max' => $this->getMax(),
+        ];
+    }
 }

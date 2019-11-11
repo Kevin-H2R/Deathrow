@@ -97,4 +97,13 @@ class Cloth
 
         return $this;
     }
+
+    public function toJson()
+    {
+        return [
+           'id' => $this->getId(),
+           'name' => $this->getName(),
+           'level' => $this->getLevel(),
+        ];
+    }
 }

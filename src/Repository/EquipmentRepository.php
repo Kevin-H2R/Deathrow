@@ -6,6 +6,8 @@ use App\Entity\Equipment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @method Equipment|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,20 +22,22 @@ class EquipmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Equipment::class);
     }
 
-    public function getEquipmentsAtPage(int $page, int $equipmentsPerPage = 10)
+    public function getEquipmentsAtPage(int $page, int $equipmentsPerPage = 12)
     {
-        $queryBuilder = $this->createQueryBuilder('e');
-        $queryBuilder->select('e, c', 'ef', 'r', 'i')
-            ->innerJoin('e.cloth', 'c')
-            ->innerJoin('e.effects', 'ef')
-            ->innerJoin('e.recipes', 'r')
-            ->innerJoin('r.item', 'i')
-            ;
-        $query = $queryBuilder->getQuery();
-        $results = $query->setFirstResult($page * $equipmentsPerPage)
-            ->setMaxResults($equipmentsPerPage)->getArrayResult();
+        $manager = $this->getEntityManager();
+        $query = $manager->createQuery(
+            'SELECT e from App\Entity\Equipment e
+            INNER JOIN e.cloth c
+            INNER JOIN e.effects ef
+            INNER JOIN e.recipes r
+            INNER JOIN r.item i
+            ORDER BY e.level DESC'
+        );
+        $query->setFirstResult($page * $equipmentsPerPage);
+        $query->setMaxResults($equipmentsPerPage);
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
 
-        return $results;
+        return $paginator;
     }
 
     // /**

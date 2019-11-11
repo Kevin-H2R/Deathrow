@@ -101,4 +101,13 @@ class Recipe
 
         return $this;
     }
+
+    public function toJson()
+    {
+        return [
+            'id' => $this->getId(),
+            'count' => $this->getCount(),
+            'item' => $this->getItem()->toJson(),
+        ];
+    }
 }

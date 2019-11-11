@@ -180,4 +180,28 @@ class Equipment
 
         return $this;
     }
+
+    public function toJson()
+    {
+        $effectsJson = [];
+        $recipesJson = [];
+        foreach ($this->getEffects() as $effect) {
+            $effectsJson[] = $effect->toJson();
+        }
+
+        foreach ($this->getRecipes() as $recipe) {
+            $recipesJson[] = $recipe->toJson();
+        }
+
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'type' => $this->getType(),
+            'level' => $this->getLevel(),
+            'imageId' => $this->getImageId(),
+            'cloth' => $this->getCloth()->toJson(),
+            'effects' => $effectsJson,
+            'recipes' => $recipesJson,
+        ];
+    }
 }

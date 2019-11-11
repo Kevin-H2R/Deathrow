@@ -129,4 +129,13 @@ class Item
 
         return $this;
     }
+
+    public function toJson()
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'image' => $this->getImageId(),
+        ];
+    }
 }
