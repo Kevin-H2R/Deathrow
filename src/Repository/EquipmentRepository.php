@@ -22,7 +22,7 @@ class EquipmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Equipment::class);
     }
 
-    public function getEquipmentsAtPage(int $page, int $equipmentsPerPage = 12)
+    public function getEquipmentsAtPage(int $page, int $equipmentsPerPage = 24)
     {
         $manager = $this->getEntityManager();
         $query = $manager->createQuery(
@@ -38,6 +38,14 @@ class EquipmentRepository extends ServiceEntityRepository
         $paginator = new Paginator($query, $fetchJoinCollection = true);
 
         return $paginator;
+    }
+
+    public function filterByName($name)
+    {
+        $queryBuilder = $this->createQueryBuilder('e');
+        $queryBuilder->where("e.name LIKE '%$name%'");
+
+        return $queryBuilder->getQuery()->getArrayResult();
     }
 
     // /**
