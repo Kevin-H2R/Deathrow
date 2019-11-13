@@ -42,10 +42,18 @@ class EquipmentRepository extends ServiceEntityRepository
 
     public function filterByName($name)
     {
-        $queryBuilder = $this->createQueryBuilder('e');
-        $queryBuilder->where("e.name LIKE '%$name%'");
+        $manager = $this->getEntityManager();
+        $query = $manager->createQuery(
+            "SELECT e from App\Entity\Equipment e
+            INNER JOIN e.cloth c
+            INNER JOIN e.effects ef
+            INNER JOIN e.recipes r
+            INNER JOIN r.item i
+            WHERE e.name LIKE '%$name%'
+            ORDER BY e.level DESC"
+        );
 
-        return $queryBuilder->getQuery()->getArrayResult();
+        return $query->getResult();
     }
 
     // /**

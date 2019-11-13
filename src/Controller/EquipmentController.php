@@ -50,19 +50,25 @@ class EquipmentController extends AbstractController
     }
 
     /**
-     * @Route("/name", name="equipment_name")
+     * @Route("/name", name="equipment_name", methods={"POST"})
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function getEquipmentByName(Request $request)
     {
-        $name = $request->get('name');
+        $name = $request->request->get('name');
 
         $manager = $this->getDoctrine()->getManager();
         /** @var EquipmentRepository $equipmentRespository */
         $equipmentRespository = $manager->getRepository(Equipment::class);
         $equipments = $equipmentRespository->filterByName($name);
 
-        return $this->json($equipments);
+        $json = [];
+        /** @var Equipment $equipment */
+        foreach ($equipments as $equipment) {
+            $json[] = $equipment->toJson();
+        }
+
+        return $this->json($json);
     }
 }
