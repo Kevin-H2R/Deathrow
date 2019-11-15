@@ -56,32 +56,13 @@ class EquipmentRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
-    // /**
-    //  * @return Equipment[] Returns an array of Equipment objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getClothsAtPage(int $page, int $equipmentsPerPage = 24)
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        $queryBuilder = $this->createQueryBuilder('e');
+        $queryBuilder->select('c.id clothId, c.name clothName, c.level, e.id ,e.type, e.name')
+            ->innerJoin('e.cloth', 'c')
         ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Equipment
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $queryBuilder->getQuery()->getArrayResult();
     }
-    */
 }

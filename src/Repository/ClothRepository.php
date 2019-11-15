@@ -19,32 +19,11 @@ class ClothRepository extends ServiceEntityRepository
         parent::__construct($registry, Cloth::class);
     }
 
-    // /**
-    //  * @return Cloth[] Returns an array of Cloth objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getClothsAtPage(int $page, int $equipmentsPerPage = 24)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $manager = $this->getEntityManager();
+        $query = $manager->createQuery(
+          'SELECT c from App\Entity\Cloth'
+        );
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Cloth
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

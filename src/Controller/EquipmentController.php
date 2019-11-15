@@ -19,17 +19,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 class EquipmentController extends AbstractController
 {
     /**
-     * @Route("/", name="equipment")
-     */
-    public function index()
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/EquipmentController.php',
-        ]);
-    }
-
-    /**
      * @Route("/page/{pageNumber}", name="equipment_page")
      * @param int $pageNumber
      * @return \Symfony\Component\HttpFoundation\JsonResponse
