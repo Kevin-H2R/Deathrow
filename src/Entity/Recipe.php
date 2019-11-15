@@ -102,12 +102,16 @@ class Recipe
         return $this;
     }
 
-    public function toJson()
+    public function toJson(int $depth = -1)
     {
+        $itemJson = [];
+        if ($depth > 0 && $depth != -1) {
+            $itemJson = $this->getItem()->toJson();
+        }
         return [
             'id' => $this->getId(),
             'count' => $this->getCount(),
-            'item' => $this->getItem()->toJson(),
+            'item' => $itemJson,
         ];
     }
 }

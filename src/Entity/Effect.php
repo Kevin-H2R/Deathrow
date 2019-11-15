@@ -90,7 +90,7 @@ class Effect
         return $this;
     }
 
-    public function toJson()
+    public function toJson(int $depth = -1)
     {
         return  [
             'id' => $this->getId(),

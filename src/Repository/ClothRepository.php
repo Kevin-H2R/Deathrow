@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Cloth;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @method Cloth|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,7 +24,22 @@ class ClothRepository extends ServiceEntityRepository
     {
         $manager = $this->getEntityManager();
         $query = $manager->createQuery(
-          'SELECT c from App\Entity\Cloth'
+          'SELECT c, e from App\Entity\Cloth c
+          INNER JOIN c.equipments e
+          '
         );
+        $query->setFirstResult($page * $equipmentsPerPage);
+        $query->setMaxResults($equipmentsPerPage);
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+        return $paginator;
+//        $queryBuilder = $this->createQueryBuilder('c');
+//        $queryBuilder->select('c, e')
+//            ->innerJoin('c.equipments', 'e')
+//        ;
+//        $queryBuilder->setFirstResult($page * $equipmentsPerPage)
+//            ->setMaxResults($equipmentsPerPage);
+//
+//        return $queryBuilder->getQuery()->getArrayResult();
     }
 }

@@ -61,6 +61,8 @@ class EquipmentRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('e');
         $queryBuilder->select('c.id clothId, c.name clothName, c.level, e.id ,e.type, e.name')
             ->innerJoin('e.cloth', 'c')
+            ->setFirstResult($page * $equipmentsPerPage)
+            ->setMaxResults($equipmentsPerPage)
         ;
 
         return $queryBuilder->getQuery()->getArrayResult();

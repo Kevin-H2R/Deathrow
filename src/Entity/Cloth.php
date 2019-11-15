@@ -5,6 +5,8 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ClothRepository")
@@ -30,6 +32,7 @@ class Cloth
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Equipment", mappedBy="cloth")
+     * @Groups({"cloth"})
      */
     private $equipments;
 
@@ -98,12 +101,20 @@ class Cloth
         return $this;
     }
 
-    public function toJson()
+    public function toJson(int $depth = -1)
     {
+        $equipmentsJson = [];
+        if ($depth > 0 && $depth != -1) {
+            --$depth;
+            foreach ($this->getEquipments() as $equipment) {
+                $equipmentsJson[] = $equipment->toJson($depth);
+            }
+        }
         return [
            'id' => $this->getId(),
            'name' => $this->getName(),
            'level' => $this->getLevel(),
+            'equipments' => $equipmentsJson,
         ];
     }
 }

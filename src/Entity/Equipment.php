@@ -181,25 +181,29 @@ class Equipment
         return $this;
     }
 
-    public function toJson()
+    public function toJson(int $depth = -1)
     {
         $effectsJson = [];
         $recipesJson = [];
-        foreach ($this->getEffects() as $effect) {
-            $effectsJson[] = $effect->toJson();
-        }
+        $clothJson = [];
+        if ($depth > 0 && $depth != -1) {
+            --$depth;
+            foreach ($this->getEffects() as $effect) {
+                $effectsJson[] = $effect->toJson($depth);
+            }
 
-        foreach ($this->getRecipes() as $recipe) {
-            $recipesJson[] = $recipe->toJson();
+            foreach ($this->getRecipes() as $recipe) {
+                $recipesJson[] = $recipe->toJson($depth);
+            }
+            $clothJson = $this->getCloth()->toJson($depth);
         }
-
         return [
             'id' => $this->getId(),
             'name' => $this->getName(),
             'type' => $this->getType(),
             'level' => $this->getLevel(),
             'imageId' => $this->getImageId(),
-            'cloth' => $this->getCloth()->toJson(),
+            'cloth' => $clothJson,
             'effects' => $effectsJson,
             'recipes' => $recipesJson,
         ];
