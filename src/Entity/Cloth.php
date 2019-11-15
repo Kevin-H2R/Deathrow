@@ -36,9 +36,15 @@ class Cloth
      */
     private $equipments;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Bonus", mappedBy="cloth")
+     */
+    private $bonuses;
+
     public function __construct()
     {
         $this->equipments = new ArrayCollection();
+        $this->bonuses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -116,5 +122,36 @@ class Cloth
            'level' => $this->getLevel(),
             'equipments' => $equipmentsJson,
         ];
+    }
+
+    /**
+     * @return Collection|Bonus[]
+     */
+    public function getBonuses(): Collection
+    {
+        return $this->bonuses;
+    }
+
+    public function addBonus(Bonus $bonus): self
+    {
+        if (!$this->bonuses->contains($bonus)) {
+            $this->bonuses[] = $bonus;
+            $bonus->setCloth($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBonus(Bonus $bonus): self
+    {
+        if ($this->bonuses->contains($bonus)) {
+            $this->bonuses->removeElement($bonus);
+            // set the owning side to null (unless already changed)
+            if ($bonus->getCloth() === $this) {
+                $bonus->setCloth(null);
+            }
+        }
+
+        return $this;
     }
 }

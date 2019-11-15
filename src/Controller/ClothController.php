@@ -7,6 +7,7 @@ use App\Entity\Equipment;
 use App\Repository\ClothRepository;
 use App\Repository\EquipmentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -36,9 +37,31 @@ class ClothController extends AbstractController
         $json = [];
         /** @var Cloth $cloth */
         foreach ($clothPaginator as $cloth) {
-            $json[] = $cloth->toJson(1);
+            $json[] = $cloth->toJson(2);
         }
         return $this->json($json);
 //        return $this->json($equipmentsPaginator);
+    }
+
+    /**
+     * @Route("/name", name="cloth_name", methods={"POST"})
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getClothByName(Request $request)
+    {
+        $name = $request->request->get('name');
+        $name = htmlspecialchars($name);
+        $manager = $this->getDoctrine()->getManager();
+        /** @var ClothRepository $repository */
+        $repository = $manager->getRepository(Cloth::class);
+        $clothPaginator = $repository->filterByName($name);
+        $json = [];
+        /** @var Cloth $cloth */
+        foreach ($clothPaginator as $cloth) {
+            $json[] = $cloth->toJson(2);
+        }
+
+        return $this->json($json);
     }
 }

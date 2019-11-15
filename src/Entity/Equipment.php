@@ -30,6 +30,7 @@ class Equipment
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cloth", inversedBy="equipments")
+     * @ORM\JoinColumn(name="cloth_id", referencedColumnName="id", nullable=true)
      */
     private $cloth;
 

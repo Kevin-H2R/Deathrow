@@ -24,22 +24,29 @@ class ClothRepository extends ServiceEntityRepository
     {
         $manager = $this->getEntityManager();
         $query = $manager->createQuery(
-          'SELECT c, e from App\Entity\Cloth c
+          "SELECT c, e from App\Entity\Cloth c
           INNER JOIN c.equipments e
-          '
+          WHERE c.name != 'None'
+          ORDER BY c.level DESC
+          "
         );
         $query->setFirstResult($page * $equipmentsPerPage);
         $query->setMaxResults($equipmentsPerPage);
         $paginator = new Paginator($query, $fetchJoinCollection = true);
 
         return $paginator;
-//        $queryBuilder = $this->createQueryBuilder('c');
-//        $queryBuilder->select('c, e')
-//            ->innerJoin('c.equipments', 'e')
-//        ;
-//        $queryBuilder->setFirstResult($page * $equipmentsPerPage)
-//            ->setMaxResults($equipmentsPerPage);
-//
-//        return $queryBuilder->getQuery()->getArrayResult();
+    }
+
+    public function filterByName(string $name)
+    {
+        $manager = $this->getEntityManager();
+        $query = $manager->createQuery(
+            "SELECT c from App\Entity\Cloth c
+            INNER JOIN c.equipments e
+            WHERE c.name LIKE '%$name%'
+            ORDER BY c.level DESC"
+        );
+
+        return $query->getResult();
     }
 }

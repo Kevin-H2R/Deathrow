@@ -32,7 +32,7 @@ class EquipmentController extends AbstractController
         $json = [];
         /** @var Equipment $equipment */
         foreach ($equipmentsPaginator as $equipment) {
-            $json[] = $equipment->toJson();
+            $json[] = $equipment->toJson(1);
         }
 
         return $this->json($json);
@@ -46,7 +46,7 @@ class EquipmentController extends AbstractController
     public function getEquipmentByName(Request $request)
     {
         $name = $request->request->get('name');
-
+        $name = htmlspecialchars($name);
         $manager = $this->getDoctrine()->getManager();
         /** @var EquipmentRepository $equipmentRespository */
         $equipmentRespository = $manager->getRepository(Equipment::class);
