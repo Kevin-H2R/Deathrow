@@ -110,17 +110,26 @@ class Cloth
     public function toJson(int $depth = -1)
     {
         $equipmentsJson = [];
+        $bonusJson = [];
         if ($depth > 0 && $depth != -1) {
             --$depth;
             foreach ($this->getEquipments() as $equipment) {
                 $equipmentsJson[] = $equipment->toJson($depth);
             }
+            foreach ($this->getBonuses() as $bonus) {
+                $count = $bonus->getCount();
+                if (!isset($bonusJson[$count])) {
+                    $bonusJson[$count] = [];
+                }
+                $bonusJson[$count][] = $bonus->toJson($depth);
+            }
         }
         return [
-           'id' => $this->getId(),
-           'name' => $this->getName(),
-           'level' => $this->getLevel(),
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'level' => $this->getLevel(),
             'equipments' => $equipmentsJson,
+            'bonuses' => $bonusJson,
         ];
     }
 

@@ -24,8 +24,9 @@ class ClothRepository extends ServiceEntityRepository
     {
         $manager = $this->getEntityManager();
         $query = $manager->createQuery(
-          "SELECT c, e from App\Entity\Cloth c
+          "SELECT c, e, b from App\Entity\Cloth c
           INNER JOIN c.equipments e
+          INNER JOIN c.bonuses b
           WHERE c.name != 'None'
           ORDER BY c.level DESC
           "
@@ -43,6 +44,7 @@ class ClothRepository extends ServiceEntityRepository
         $query = $manager->createQuery(
             "SELECT c from App\Entity\Cloth c
             INNER JOIN c.equipments e
+            INNER JOIN c.bonuses b
             WHERE c.name LIKE '%$name%'
             ORDER BY c.level DESC"
         );

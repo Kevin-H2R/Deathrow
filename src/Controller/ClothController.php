@@ -24,20 +24,19 @@ class ClothController extends AbstractController
 {
     /**
      * @Route("/page/{pageNumber}")
+     * @param int $pageNumber
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function getClothsForPage(int $pageNumber)
     {
         $manager = $this->getDoctrine()->getManager();
-//        /** @var EquipmentRepository $equipmentRespository */
-//        $equipmentRespository = $manager->getRepository(Equipment::class);
-//        $equipmentsPaginator = $equipmentRespository->getClothsAtPage($pageNumber);
         /** @var ClothRepository $clothRepository */
         $clothRepository = $manager->getRepository(Cloth::class);
         $clothPaginator = $clothRepository->getClothsAtPage($pageNumber);
         $json = [];
         /** @var Cloth $cloth */
         foreach ($clothPaginator as $cloth) {
-            $json[] = $cloth->toJson(2);
+            $json[] = $cloth->toJson(1);
         }
         return $this->json($json);
 //        return $this->json($equipmentsPaginator);

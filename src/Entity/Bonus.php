@@ -89,4 +89,20 @@ class Bonus
 
         return $this;
     }
+
+    public function toJson(int $depth = -1)
+    {
+        $clothJson = [];
+        if ($depth > 0 && $depth != -1) {
+            --$depth;
+            $clothJson[] = $this->getCloth()->toJson($depth);
+        }
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'count' => $this->getCount(),
+            'value' => $this->getValue(),
+            'cloth' => $clothJson,
+        ];
+    }
 }
