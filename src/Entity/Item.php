@@ -38,10 +38,16 @@ class Item
      */
     private $image_id;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Price", mappedBy="item")
+     */
+    private $prices;
+
     public function __construct()
     {
         $this->equipments = new ArrayCollection();
         $this->recipes = new ArrayCollection();
+        $this->prices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -137,5 +143,36 @@ class Item
             'name' => $this->getName(),
             'image' => $this->getImageId(),
         ];
+    }
+
+    /**
+     * @return Collection|Price[]
+     */
+    public function getPrices(): Collection
+    {
+        return $this->prices;
+    }
+
+    public function addPrice(Price $price): self
+    {
+        if (!$this->prices->contains($price)) {
+            $this->prices[] = $price;
+            $price->setItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrice(Price $price): self
+    {
+        if ($this->prices->contains($price)) {
+            $this->prices->removeElement($price);
+            // set the owning side to null (unless already changed)
+            if ($price->getItem() === $this) {
+                $price->setItem(null);
+            }
+        }
+
+        return $this;
     }
 }
