@@ -40,6 +40,25 @@ class EquipmentRepository extends ServiceEntityRepository
         return $paginator;
     }
 
+    public function getWeaponsAtPage(int $page, int $equipmentsPerPage = 24)
+    {
+        $manager = $this->getEntityManager();
+        $query = $manager->createQuery(
+            "SELECT e from App\Entity\Equipment e
+            LEFT JOIN e.cloth c
+            INNER JOIN e.effects ef
+            INNER JOIN e.recipes r
+            INNER JOIN r.item i
+            WHERE e.type IN ('ep', 'da', 'ba', 'bn', 'ar', 'br', 'fx', 'ha', 'ma', 'pe', 'pi')
+            ORDER BY e.level DESC"
+        );
+        $query->setFirstResult($page * $equipmentsPerPage);
+        $query->setMaxResults($equipmentsPerPage);
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+        return $paginator;
+    }
+
     public function filterByName($name)
     {
         $manager = $this->getEntityManager();
@@ -66,5 +85,28 @@ class EquipmentRepository extends ServiceEntityRepository
         ;
 
         return $queryBuilder->getQuery()->getArrayResult();
+    }
+
+    public function getEquipmentsByTypeAtPage(
+        array $types,
+        int $page,
+        int $equipmentsPerPage = 24
+    ) {
+        $formattedTypes = "'". implode("','", $types) . "'";
+        $manager = $this->getEntityManager();
+        $query = $manager->createQuery(
+            "SELECT e from App\Entity\Equipment e
+            LEFT JOIN e.cloth c
+            INNER JOIN e.effects ef
+            INNER JOIN e.recipes r
+            INNER JOIN r.item i
+            WHERE e.type in ($formattedTypes)
+            ORDER BY e.level DESC"
+        );
+        $query->setFirstResult($page * $equipmentsPerPage);
+        $query->setMaxResults($equipmentsPerPage);
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+        return $paginator;
     }
 }

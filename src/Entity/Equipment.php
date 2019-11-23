@@ -237,7 +237,10 @@ class Equipment
             foreach ($this->getRecipes() as $recipe) {
                 $recipesJson[] = $recipe->toJson($depth);
             }
-            $clothJson = $this->getCloth()->toJson($depth);
+            if ($this->getCloth() !== null) {
+                $clothJson = $this->getCloth()->toJson($depth);
+
+            }
         }
         return [
             'id' => $this->getId(),

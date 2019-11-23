@@ -37,6 +37,11 @@ class Effect
      */
     private $equipment;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isDamage;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -97,6 +102,19 @@ class Effect
             'name' => $this->getName(),
             'min' => $this->getMin(),
             'max' => $this->getMax(),
+            'isDamage' => $this->getIsDamage(),
         ];
+    }
+
+    public function getIsDamage(): ?bool
+    {
+        return $this->isDamage;
+    }
+
+    public function setIsDamage(bool $isDamage): self
+    {
+        $this->isDamage = $isDamage;
+
+        return $this;
     }
 }
