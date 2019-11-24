@@ -74,6 +74,22 @@ class EquipmentRepository extends ServiceEntityRepository
 
         return $query->getResult();
     }
+    public function filterWeaponsByName($name)
+    {
+        $manager = $this->getEntityManager();
+        $query = $manager->createQuery(
+            "SELECT e from App\Entity\Equipment e
+            LEFT JOIN e.cloth c
+            INNER JOIN e.effects ef
+            INNER JOIN e.recipes r
+            INNER JOIN r.item i
+            WHERE e.name LIKE '%$name%' AND
+            e.type IN ('ep', 'da', 'ba', 'bn', 'ar', 'br', 'fx', 'ha', 'ma', 'pe', 'pi')
+            ORDER BY e.level DESC"
+        );
+
+        return $query->getResult();
+    }
 
     public function getClothsAtPage(int $page, int $equipmentsPerPage = 24)
     {

@@ -59,6 +59,29 @@ class EquipmentController extends AbstractController
     }
 
     /**
+     * @Route("/weapons/name", name="weapons_name", methods={"POST"})
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getWeaponsByName(Request $request)
+    {
+        $name = $request->request->get('name');
+        $name = htmlspecialchars($name);
+        $manager = $this->getDoctrine()->getManager();
+        /** @var EquipmentRepository $equipmentRepository */
+        $equipmentRepository = $manager->getRepository(Equipment::class);
+        $equipments = $equipmentRepository->filterWeaponsByName($name);
+
+        $json = [];
+        /** @var Equipment $equipment */
+        foreach ($equipments as $equipment) {
+            $json[] = $equipment->toJson(1);
+        }
+
+        return $this->json($json);
+    }
+
+    /**
      * @Route("/name", name="equipment_name", methods={"POST"})
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse
@@ -68,14 +91,14 @@ class EquipmentController extends AbstractController
         $name = $request->request->get('name');
         $name = htmlspecialchars($name);
         $manager = $this->getDoctrine()->getManager();
-        /** @var EquipmentRepository $equipmentRespository */
+        /** @var EquipmentRepository $equipmentRepository */
         $equipmentRepository = $manager->getRepository(Equipment::class);
         $equipments = $equipmentRepository->filterByName($name);
 
         $json = [];
         /** @var Equipment $equipment */
         foreach ($equipments as $equipment) {
-            $json[] = $equipment->toJson();
+            $json[] = $equipment->toJson(1);
         }
 
         return $this->json($json);

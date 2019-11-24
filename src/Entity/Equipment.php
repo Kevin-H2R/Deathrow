@@ -242,16 +242,20 @@ class Equipment
 
             }
         }
-        return [
+        $json = [
             'id' => $this->getId(),
             'name' => $this->getName(),
             'type' => $this->getType(),
             'level' => $this->getLevel(),
             'imageId' => $this->getImageId(),
-            'cloth' => $clothJson,
             'effects' => $effectsJson,
             'recipes' => $recipesJson,
         ];
+        if (!empty($clothJson)) {
+            $json['cloth'] = $clothJson;
+        }
+
+        return $json;
     }
 
     /**
