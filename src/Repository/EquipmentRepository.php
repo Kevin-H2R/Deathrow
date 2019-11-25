@@ -31,6 +31,7 @@ class EquipmentRepository extends ServiceEntityRepository
             INNER JOIN e.effects ef
             INNER JOIN e.recipes r
             INNER JOIN r.item i
+            WHERE e.type NOT IN (\'ep\', \'da\', \'ba\', \'bn\', \'ar\', \'br\', \'fx\', \'ha\', \'ma\', \'pe\', \'pi\')
             ORDER BY e.level DESC'
         );
         $query->setFirstResult($page * $equipmentsPerPage);
@@ -68,7 +69,8 @@ class EquipmentRepository extends ServiceEntityRepository
             INNER JOIN e.effects ef
             INNER JOIN e.recipes r
             INNER JOIN r.item i
-            WHERE e.name LIKE '%$name%'
+            WHERE e.name LIKE '%$name%' AND
+            e.type NOT IN ('ep', 'da', 'ba', 'bn', 'ar', 'br', 'fx', 'ha', 'ma', 'pe', 'pi')
             ORDER BY e.level DESC"
         );
 
