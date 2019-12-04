@@ -18,6 +18,8 @@ class Price
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Item", inversedBy="prices")
+     * @ORM\JoinColumn(nullable=true)
+
      */
     private $item;
 
@@ -40,6 +42,11 @@ class Price
      * @ORM\Column(type="datetime")
      */
     private $date;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Equipment", inversedBy="prices")
+     */
+    private $equipment;
 
     public function getId(): ?int
     {
@@ -102,6 +109,18 @@ class Price
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getEquipment(): ?Equipment
+    {
+        return $this->equipment;
+    }
+
+    public function setEquipment(?Equipment $equipment): self
+    {
+        $this->equipment = $equipment;
 
         return $this;
     }

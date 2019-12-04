@@ -94,11 +94,17 @@ class Equipment
      */
     private $hits_lines;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Price", mappedBy="equipment")
+     */
+    private $prices;
+
     public function __construct()
     {
         $this->recipes = new ArrayCollection();
         $this->effects = new ArrayCollection();
         $this->constraints = new ArrayCollection();
+        $this->prices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -369,6 +375,37 @@ class Equipment
     public function setHitsLines(?int $hits_lines): self
     {
         $this->hits_lines = $hits_lines;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Price[]
+     */
+    public function getPrices(): Collection
+    {
+        return $this->prices;
+    }
+
+    public function addPrice(Price $price): self
+    {
+        if (!$this->prices->contains($price)) {
+            $this->prices[] = $price;
+            $price->setEquipment($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrice(Price $price): self
+    {
+        if ($this->prices->contains($price)) {
+            $this->prices->removeElement($price);
+            // set the owning side to null (unless already changed)
+            if ($price->getEquipment() === $this) {
+                $price->setEquipment(null);
+            }
+        }
 
         return $this;
     }
