@@ -141,7 +141,17 @@ class EquipmentController extends AbstractController
                 $accumulated[$equipmentName] = [];
             }
             unset($current['equipment']);
-            $accumulated[$equipmentName][] = $current;
+            $itemName = $current['name'];
+            if (!isset($accumulated[$equipmentName][$itemName])) {
+                $accumulated[$equipmentName][$itemName] = [];
+            }
+            unset($current['name']);
+            if (!isset($accumulated[$equipmentName][$itemName]['date']) || $accumulated[$equipmentName][$itemName]['date'] < $current['date']) {
+                $accumulated[$equipmentName][$itemName] = $current;
+                if (isset($accumulated[$equipmentName][$itemName]['date'])) {
+                    $accumulated[$equipmentName][$itemName]['date'] = $accumulated[$equipmentName][$itemName]['date']->format("d-m-Y H:i:s");
+                }
+            }
             return $accumulated;
         }, []);
 
