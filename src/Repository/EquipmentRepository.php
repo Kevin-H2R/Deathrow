@@ -127,4 +127,18 @@ class EquipmentRepository extends ServiceEntityRepository
 
         return $paginator;
     }
+
+    public function getPrices($itemName = "Bouf")
+    {
+        return $this->createQueryBuilder('e')
+            ->select('e.name as equipment, i.name, r.count, p.unit, p.tens, p.hundreds, p.date')
+            ->innerJoin('e.recipes', 'r')
+            ->innerJoin('r.item', 'i')
+            ->leftJoin('i.prices', 'p')
+            ->where('e.name LIKE :val')
+            ->orderBy('r.count', 'DESC')
+            ->setParameter('val', "%".$itemName."%")
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

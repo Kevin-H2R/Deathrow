@@ -6,6 +6,7 @@ use App\Entity\Item;
 use App\Repository\ItemRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -16,17 +17,6 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class ItemController extends AbstractController
 {
-    /**
-     * @Route("/", name="item_index")
-     */
-    public function index()
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/ItemController.php',
-        ]);
-    }
-
     /**
      * @Route("/all", name="item_all")
      * @param EntityManager $manager
@@ -40,5 +30,20 @@ class ItemController extends AbstractController
         $items = $itemRepository->getNFirsts(10);
 
         return $this->json($items);
+    }
+
+    /**
+     * @Route("/name", name="item_name", methods={"POST"})
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getByName(Request $request)
+    {
+        $itemName = $request->request->get('name');
+        /** @var ItemRepository $itemRepository */
+        $itemRepository = $this->getDoctrine()->getRepository(Item::class);
+        $result = $itemRepository->findByName($itemName);
+
+        return $this->json($result);
     }
 }

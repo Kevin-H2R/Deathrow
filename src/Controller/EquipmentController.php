@@ -124,4 +124,27 @@ class EquipmentController extends AbstractController
         }
         return $this->json($json);
     }
+
+    /**
+     * @Route("/price", name="equipment_price", methods={"POST"})
+     */
+    public function getEquipmentPrice(Request $request)
+    {
+        $itemName = $request->request->get('name');
+        /** @var EquipmentRepository $equipmentRepository */
+        $equipmentRepository = $this->getDoctrine()->getRepository(Equipment::class);
+        $result = $equipmentRepository->getPrices($itemName);
+
+        $formattedResult = array_reduce($result, function ($accumulated, $current) {
+            $equipmentName = $current['equipment'];
+            if (!isset($accumulated[$equipmentName])) {
+                $accumulated[$equipmentName] = [];
+            }
+            unset($current['equipment']);
+            $accumulated[$equipmentName][] = $current;
+            return $accumulated;
+        }, []);
+
+        return $this->json($formattedResult);
+    }
 }

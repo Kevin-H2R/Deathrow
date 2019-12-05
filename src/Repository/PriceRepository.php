@@ -19,6 +19,21 @@ class PriceRepository extends ServiceEntityRepository
         parent::__construct($registry, Price::class);
     }
 
+    public function getPricesForItem(string $itemName)
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->select('e.name as equipment, p.unit, p.tens, p.hundreds, p.date')
+            ->addSelect('i.name')
+            ->addSelect('r.count')
+            ->innerJoin('p.item', 'i')
+            ->innerJoin('i.equipments', 'e')
+            ->innerJoin('e.recipes', 'r', 'WITh', 'r.item = i')
+            ->andWhere('e.name LIKE :val')
+            ->setParameter('val', "%".$itemName."%");
+
+        return $queryBuilder->getQuery()->getArrayResult();
+    }
+
     // /**
     //  * @return Price[] Returns an array of Price objects
     //  */

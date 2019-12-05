@@ -28,32 +28,15 @@ class ItemRepository extends ServiceEntityRepository
         return $query->setMaxResults(10)->setFirstResult(9)->getArrayResult();
     }
 
-    // /**
-    //  * @return Item[] Returns an array of Item objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findByName(string $name)
     {
         return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
+            ->select('i.name')
+            ->addSelect('p.unit, p.tens, p.hundreds, p.date')
+            ->leftJoin('i.prices', 'p')
+            ->where('i.name LIKE :val')
+            ->setParameter('val', '%' . $name . '%')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getArrayResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Item
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
