@@ -33,31 +33,49 @@ class ItemController extends AbstractController
     }
 
     /**
-     * @Route("/name", name="item_name", methods={"POST"})
+     * @Route("/price", name="item_name", methods={"POST"})
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getByName(Request $request)
+    public function getPrice(Request $request)
     {
         $itemName = $request->request->get('name');
         /** @var ItemRepository $itemRepository */
         $itemRepository = $this->getDoctrine()->getRepository(Item::class);
-        $result = $itemRepository->findByName($itemName);
+        $result = $itemRepository->findItemByName($itemName);
 
         $formattedResult = array_reduce($result, function ($acc, $cur) {
             $itemName = $cur['name'];
             if (!isset($acc[$itemName])) {
                 $acc[$itemName] = [];
             }
-            if (!isset($acc[$itemName]['date']) || $acc[$itemName]['date'] < $cur['date']) {
-                $acc[$itemName] = $cur;
-                if (isset($acc[$itemName]['date'])) {
-                    $acc[$itemName]['date'] = $acc[$itemName]['date']->format("d-m-Y H:i:s");
-                }
-            }
 
+            $resource = $cur['resource'];
+            if (!isset($acc[$itemName][$resource])) {
+                $acc[$itemName][$resource] = [];
+            }
+            if (empty($acc[$itemName][$resource]) || $acc[$itemName][$resource]['date'] < $cur['date']) {
+                unset($cur['name']);
+                unset($cur['resource']);
+                $acc[$itemName][$resource] = $cur;
+            }
             return $acc;
-        }, []);
+        });
+
+//        $formattedResult = array_reduce($result, function ($acc, $cur) {
+//            $itemName = $cur['name'];
+//            if (!isset($acc[$itemName])) {
+//                $acc[$itemName] = [];
+//            }
+//            if (!isset($acc[$itemName]['date']) || $acc[$itemName]['date'] < $cur['date']) {
+//                $acc[$itemName] = $cur;
+//                if (isset($acc[$itemName]['date'])) {
+//                    $acc[$itemName]['date'] = $acc[$itemName]['date']->format("d-m-Y H:i:s");
+//                }
+//            }
+//
+//            return $acc;
+//        }, []);
 
         return $this->json($formattedResult);
     }

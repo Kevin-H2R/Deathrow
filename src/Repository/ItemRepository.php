@@ -15,6 +15,9 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class ItemRepository extends ServiceEntityRepository
 {
+    const WEAPONS = ['ar','ba','bn','br','da','ep','fx','ha','ma','pe','pi'];
+    const RESOURCES = ['res'];
+    const ITEMS = ['al','am','an','bo','ca','ce','ch','do','fa','mo','sa'];
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Item::class);
@@ -29,13 +32,36 @@ class ItemRepository extends ServiceEntityRepository
         return $query->setMaxResults(10)->setFirstResult(9)->getArrayResult();
     }
 
-    public function findByName(string $name)
+    public function findItemByName(string $name)
+    {
+        $excludedCategories = '\''. implode('\',\'', array_merge(self::WEAPONS, self::RESOURCES)) . '\'';
+        return $this->createQueryBuilder('i')
+            ->select('i.name as name')
+            ->addSelect('ii.name as resource, r.count, p.unit, p.tens, p.hundreds, p.date')
+            ->innerJoin('i.productedBy', 'r')
+            ->innerJoin('r.item', 'ii')
+            ->leftJoin('ii.prices', 'p')
+            ->where("i.name LIKE :val AND i.type NOT IN ($excludedCategories)")
+            ->setParameter('val', '%' . $name . '%')
+            ->orderBy('i.name')
+            ->getQuery()
+            ->getArrayResult();
+//        return $this->findByName($name, $excludedCategories);
+    }
+
+    public function findResourceByName(string $name)
+    {
+        $excludedCategories = '\''. implode('\',\'', array_merge(self::WEAPONS, self::ITEMS)) . '\'';
+        return $this->findByName($name, $excludedCategories);
+    }
+
+    private function findByName(string $name, string $excludedCategories)
     {
         return $this->createQueryBuilder('i')
             ->select('i.name')
             ->addSelect('p.unit, p.tens, p.hundreds, p.date')
             ->leftJoin('i.prices', 'p')
-            ->where('i.name LIKE :val')
+            ->where("i.name LIKE :val AND i.type NOT IN ($excludedCategories)")
             ->setParameter('val', '%' . $name . '%')
             ->getQuery()
             ->getArrayResult();
