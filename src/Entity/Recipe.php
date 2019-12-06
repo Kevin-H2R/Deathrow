@@ -36,14 +36,10 @@ class Recipe
     private $item;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Equipment", mappedBy="recipes")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Item", inversedBy="productedBy")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $equipments;
-
-    public function __construct()
-    {
-        $this->equipments = new ArrayCollection();
-    }
+    private $product;
 
     public function getId(): ?int
     {
@@ -74,34 +70,6 @@ class Recipe
         return $this;
     }
 
-    /**
-     * @return Collection|Equipment[]
-     */
-    public function getEquipments(): Collection
-    {
-        return $this->equipments;
-    }
-
-    public function addEquipment(Equipment $equipment): self
-    {
-        if (!$this->equipments->contains($equipment)) {
-            $this->equipments[] = $equipment;
-            $equipment->addRecipe($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEquipment(Equipment $equipment): self
-    {
-        if ($this->equipments->contains($equipment)) {
-            $this->equipments->removeElement($equipment);
-            $equipment->removeRecipe($this);
-        }
-
-        return $this;
-    }
-
     public function toJson(int $depth = -1)
     {
         $itemJson = [];
@@ -113,5 +81,17 @@ class Recipe
             'count' => $this->getCount(),
             'item' => $itemJson,
         ];
+    }
+
+    public function getProduct(): ?Item
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Item $product): self
+    {
+        $this->product = $product;
+
+        return $this;
     }
 }

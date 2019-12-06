@@ -43,11 +43,6 @@ class Price
      */
     private $date;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Equipment", inversedBy="prices")
-     */
-    private $equipment;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -109,18 +104,6 @@ class Price
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
-
-        return $this;
-    }
-
-    public function getEquipment(): ?Equipment
-    {
-        return $this->equipment;
-    }
-
-    public function setEquipment(?Equipment $equipment): self
-    {
-        $this->equipment = $equipment;
 
         return $this;
     }

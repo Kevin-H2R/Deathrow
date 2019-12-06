@@ -32,15 +32,14 @@ class Effect
     private $max;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Equipment", inversedBy="effects")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $equipment;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $isDamage;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Item", inversedBy="effects")
+     */
+    private $item;
 
     public function getId(): ?int
     {
@@ -83,18 +82,6 @@ class Effect
         return $this;
     }
 
-    public function getEquipment(): ?Equipment
-    {
-        return $this->equipment;
-    }
-
-    public function setEquipment(?Equipment $equipment): self
-    {
-        $this->equipment = $equipment;
-
-        return $this;
-    }
-
     public function toJson(int $depth = -1)
     {
         return  [
@@ -114,6 +101,18 @@ class Effect
     public function setIsDamage(bool $isDamage): self
     {
         $this->isDamage = $isDamage;
+
+        return $this;
+    }
+
+    public function getItem(): ?Item
+    {
+        return $this->item;
+    }
+
+    public function setItem(?Item $item): self
+    {
+        $this->item = $item;
 
         return $this;
     }

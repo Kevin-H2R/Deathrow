@@ -31,20 +31,19 @@ class Cloth
     private $level;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Equipment", mappedBy="cloth")
-     * @Groups({"cloth"})
-     */
-    private $equipments;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Bonus", mappedBy="cloth")
      */
     private $bonuses;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Item", mappedBy="cloth")
+     */
+    private $items;
+
     public function __construct()
     {
-        $this->equipments = new ArrayCollection();
         $this->bonuses = new ArrayCollection();
+        $this->items = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -76,45 +75,15 @@ class Cloth
         return $this;
     }
 
-    /**
-     * @return Collection|Equipment[]
-     */
-    public function getEquipments(): Collection
-    {
-        return $this->equipments;
-    }
-
-    public function addEquipment(Equipment $equipment): self
-    {
-        if (!$this->equipments->contains($equipment)) {
-            $this->equipments[] = $equipment;
-            $equipment->setCloth($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEquipment(Equipment $equipment): self
-    {
-        if ($this->equipments->contains($equipment)) {
-            $this->equipments->removeElement($equipment);
-            // set the owning side to null (unless already changed)
-            if ($equipment->getCloth() === $this) {
-                $equipment->setCloth(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function toJson(int $depth = -1)
     {
-        $equipmentsJson = [];
+        $itemsJson = [];
         $bonusJson = [];
         if ($depth > 0 && $depth != -1) {
             --$depth;
-            foreach ($this->getEquipments() as $equipment) {
-                $equipmentsJson[] = $equipment->toJson($depth);
+            foreach ($this->getItems() as $item) {
+                $itemsJson[] = $item->toJson($depth);
             }
             foreach ($this->getBonuses() as $bonus) {
                 $count = $bonus->getCount();
@@ -128,7 +97,7 @@ class Cloth
             'id' => $this->getId(),
             'name' => $this->getName(),
             'level' => $this->getLevel(),
-            'equipments' => $equipmentsJson,
+            'items' => $itemsJson,
             'bonuses' => $bonusJson,
         ];
     }
@@ -158,6 +127,37 @@ class Cloth
             // set the owning side to null (unless already changed)
             if ($bonus->getCloth() === $this) {
                 $bonus->setCloth(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Item[]
+     */
+    public function getItems(): Collection
+    {
+        return $this->items;
+    }
+
+    public function addItem(Item $item): self
+    {
+        if (!$this->items->contains($item)) {
+            $this->items[] = $item;
+            $item->setCloth($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItem(Item $item): self
+    {
+        if ($this->items->contains($item)) {
+            $this->items->removeElement($item);
+            // set the owning side to null (unless already changed)
+            if ($item->getCloth() === $this) {
+                $item->setCloth(null);
             }
         }
 

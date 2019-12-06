@@ -32,10 +32,9 @@ class Constraint
     private $value;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Equipment", inversedBy="constraints")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Item", inversedBy="constraints")
      */
-    private $equipment;
+    private $item;
 
     public function getId(): ?int
     {
@@ -78,14 +77,14 @@ class Constraint
         return $this;
     }
 
-    public function getEquipment(): ?Equipment
+    public function getItem(): ?Item
     {
-        return $this->equipment;
+        return $this->item;
     }
 
-    public function setEquipment(?Equipment $equipment): self
+    public function setItem(?Item $item): self
     {
-        $this->equipment = $equipment;
+        $this->item = $item;
 
         return $this;
     }
