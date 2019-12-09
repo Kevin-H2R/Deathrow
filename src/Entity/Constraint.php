@@ -27,7 +27,7 @@ class Constraint
     private $sign;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="integer")
      */
     private $value;
 

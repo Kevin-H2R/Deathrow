@@ -8,12 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RecipeRepository")
- * @ORM\Table(
- *     name="recipe",
- *     uniqueConstraints={
- *       @ORM\UniqueConstraint(name="unique_recipe", columns={"item_id", "count"})
- *     }
- * )
  */
 class Recipe
 {

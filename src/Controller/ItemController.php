@@ -57,6 +57,9 @@ class ItemController extends AbstractController
             if (empty($acc[$itemName][$resource]) || $acc[$itemName][$resource]['date'] < $cur['date']) {
                 unset($cur['name']);
                 unset($cur['resource']);
+                if (isset($cur['date'])) {
+                    $cur['date'] = $cur['date']->format("d-m-Y H:i:s");
+                }
                 $acc[$itemName][$resource] = $cur;
             }
             return $acc;

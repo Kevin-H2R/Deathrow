@@ -20,7 +20,7 @@ class ResourceController extends AbstractController
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getByName(Request $request)
+    public function getPrice(Request $request)
     {
         $itemName = $request->request->get('name');
         /** @var ItemRepository $itemRepository */
